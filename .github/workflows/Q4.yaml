@@ -1,0 +1,39 @@
+name: Q4 - Archive Q4.java avec date
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "Q4.java"
+      - ".github/workflows/Q4.yaml"
+  workflow_dispatch:
+
+jobs:
+  archive-q4:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Création d'archive avec date
+        run: |
+          DATE=$(date '+%d-%m-%Y')
+          echo "Nom et Prénom: Cauvin Pierre" > Q4_archive_${DATE}.txt
+          echo "" >> Q4_archive_${DATE}.txt
+          echo "Contenu de Q4.java:" >> Q4_archive_${DATE}.txt
+          cat Q4.java >> Q4_archive_${DATE}.txt
+
+      - name: Commit et push archive
+        run: |
+          git config --local user.email "pierre.cauvin@univ-lehavre.fr"
+          git config --local user.name "Cauvin Pierre"
+          git add Q4_archive_*.txt
+          git diff --staged --quiet || git commit -m "Q4: Archive Q4.java avec date"
+          git pull --rebase origin ${{ github.ref_name }}
+          git push
