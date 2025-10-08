@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - main
+    paths:
+      - "TOTO.txt"
+      - ".github/workflows/Q2.yaml"
   workflow_dispatch:
 
 jobs:
@@ -35,4 +38,5 @@ jobs:
           git config --local user.name "Cauvin Pierre"
           git add Q2_archive_TOTO.txt
           git diff --staged --quiet || git commit -m "Q2: Archive TOTO.txt avec informations"
+          git pull --rebase origin ${{ github.ref_name }}
           git push
