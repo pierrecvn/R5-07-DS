@@ -1,0 +1,27 @@
+name: Q1 - Archive TOTO
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  archive-toto:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Create archive file
+        run: |
+          cp TOTO.txt Q1_archive_TOTO.txt
+
+      - name: Commit and push archive
+        run: |
+          git config --local user.email "pierre.cauvin@univ-lehavre.fr"
+          git config --local user.name "Cauvin Pierre"
+          git add Q1_archive_TOTO.txt
+          git diff --staged --quiet || git commit -m "Q1: Archive TOTO.txt"
+          git push
