@@ -1,0 +1,38 @@
+name: Q3 - Archive Q3.java
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "Q3.java"
+      - ".github/workflows/Q3.yaml"
+  workflow_dispatch:
+
+jobs:
+  archive-q3:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Création d'archive
+        run: |
+          echo "Nom et Prénom: Cauvin Pierre" > Q3_archive_java.txt
+          echo "" >> Q3_archive_java.txt
+          echo "Contenu de Q3.java:" >> Q3_archive_java.txt
+          cat Q3.java >> Q3_archive_java.txt
+
+      - name: Commit et push archive
+        run: |
+          git config --local user.email "pierre.cauvin@univ-lehavre.fr"
+          git config --local user.name "Cauvin Pierre"
+          git add Q3_archive_java.txt
+          git diff --staged --quiet || git commit -m "Q3: Archive Q3.java"
+          git pull --rebase origin ${{ github.ref_name }}
+          git push
