@@ -1,0 +1,38 @@
+name: Q2 - Archive TOTO avec infos
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  archive-toto-infos:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Création d'archive avec info
+        run: |
+          echo "Nom et Prénom: Cauvin Pierre" > Q2_archive_TOTO.txt
+          echo "" >> Q2_archive_TOTO.txt
+          echo "Date et heure d'exécution: $(date '+%d/%m/%Y %H:%M:%S')" >> Q2_archive_TOTO.txt
+          echo "" >> Q2_archive_TOTO.txt
+          echo "Contenu de TOTO.txt:" >> Q2_archive_TOTO.txt
+          cat TOTO.txt >> Q2_archive_TOTO.txt
+          echo "" >> Q2_archive_TOTO.txt
+          echo "Taille de TOTO.txt: $(wc -c < TOTO.txt) octets" >> Q2_archive_TOTO.txt
+
+      - name: Commit et push archive
+        run: |
+          git config --local user.email "pierre.cauvin@univ-lehavre.fr"
+          git config --local user.name "Cauvin Pierre"
+          git add Q2_archive_TOTO.txt
+          git diff --staged --quiet || git commit -m "Q2: Archive TOTO.txt avec informations"
+          git push
