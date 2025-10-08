@@ -1,7 +1,7 @@
 Nom et Prénom: Cauvin Pierre
 
-Date et heure d'exécution: 08/10/2025 14:05:03
+Date et heure d'exécution: 08/10/2025 14:13:53
 
 Contenu de TOTO.txt:
-
-Taille de TOTO.txt: 0 octets
+Ceci est le fichier TOTO.txt
+Taille de TOTO.txt: 28 octets
