@@ -1,0 +1,27 @@
+Nom et Prénom: Cauvin Pierre
+
+Contenu de Q6.java:
+public class Q6 {
+	public static void main(String[] args) {
+		if (args.length == 0) {
+			System.out.println("Usage: java Q6 N");
+			return;
+		}
+
+		int n = Integer.parseInt(args[0]);
+
+		for (int i = n; i >= 1; i--) {
+			for (int j = 1; j <= i; j++) {
+				System.out.print("x");
+				if (j < i) {
+					System.out.print(" ");
+				}
+			}
+			System.out.println();
+		}
+	}
+}
+
+Statistiques de Q6.java:
+Nombre de caractères: 367
+Nombre de lignes: 20
