@@ -1,0 +1,62 @@
+name: Q6 - Archive Q6.java avec date et différences
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "Q6.java"
+      - ".github/workflows/Q6.yaml"
+  workflow_dispatch:
+
+jobs:
+  archive-q6:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Création d'archive avec date et stats
+        run: |
+          DATETIME=$(date '+%d-%m-%Y-%H%M%S')
+          FILENAME="Q6_archive_${DATETIME}.txt"
+
+          echo "Nom et Prénom: Cauvin Pierre" > ${FILENAME}
+          echo "" >> ${FILENAME}
+          echo "Contenu de Q6.java:" >> ${FILENAME}
+          cat Q6.java >> ${FILENAME}
+          echo "" >> ${FILENAME}
+          echo "Statistiques de Q6.java:" >> ${FILENAME}
+          echo "Nombre de caractères: $(wc -c < Q6.java)" >> ${FILENAME}
+          echo "Nombre de lignes: $(wc -l < Q6.java)" >> ${FILENAME}
+
+      - name: Création de fichier de différences
+        run: |
+          # Trouver les deux derniers fichiers Q6_archive_*.txt
+          FILES=$(ls -t Q6_archive_*.txt 2>/dev/null | head -n 2)
+          COUNT=$(echo "$FILES" | wc -l)
+
+          if [ "$COUNT" -ge 2 ]; then
+            LAST=$(echo "$FILES" | sed -n '1p')
+            PREVIOUS=$(echo "$FILES" | sed -n '2p')
+            
+            echo "Différences entre $PREVIOUS et $LAST:" > Q6_différences.txt
+            echo "" >> Q6_différences.txt
+            diff "$PREVIOUS" "$LAST" >> Q6_différences.txt || true
+          else
+            echo "Pas assez de fichiers Q6_archive pour comparer" > Q6_différences.txt
+          fi
+
+      - name: Commit et push archives
+        run: |
+          git config --local user.email "pierre.cauvin@univ-lehavre.fr"
+          git config --local user.name "Cauvin Pierre"
+          git add Q6_archive_*.txt Q6_différences.txt
+          git diff --staged --quiet || git commit -m "Q6: Archive Q6.java avec date, stats et différences"
+          git pull --rebase origin ${{ github.ref_name }}
+          git push
